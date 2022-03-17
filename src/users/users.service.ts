@@ -11,7 +11,9 @@ export class UsersService {
   constructor(@InjectRepository(User) private repo: Repository<User>) {}
 
   async create(request: CreateUserDto): Promise<User> {
-    return this.repo.save(request);
+    const user = this.repo.create(request);
+
+    return this.repo.save(user);
   }
 
   async findUser(id: number) {
