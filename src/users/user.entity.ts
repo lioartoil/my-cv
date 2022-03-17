@@ -1,7 +1,7 @@
 import {
   AfterInsert,
-  AfterRemove,
   AfterUpdate,
+  BeforeRemove,
   Column,
   Entity,
   PrimaryGeneratedColumn,
@@ -20,14 +20,16 @@ export class User {
 
   @AfterInsert()
   logInsert() {
-    console.info(`Inserted user with id ${this.id}`);
+    console.info(`Inserted user with ID ${this.id}`);
   }
+
   @AfterUpdate()
   logUpdate() {
-    console.info(`Updated user with id ${this.id}`);
+    console.info(`Updated user with ID ${this.id}`);
   }
-  @AfterRemove()
+
+  @BeforeRemove()
   logRemove() {
-    console.info(`Removed user with id ${this.id}`);
+    console.info(`Removed user with ID ${this.id}`);
   }
 }
