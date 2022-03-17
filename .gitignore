@@ -36,3 +36,5 @@ yarn.lock
 !.vscode/extensions.json
 
 db.sqlite
+
+*request.http
