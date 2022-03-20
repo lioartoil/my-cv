@@ -1,7 +1,7 @@
 import { scrypt as _scrypt, randomBytes } from 'crypto';
 import { promisify } from 'util';
 
-import { Injectable, UnauthorizedException, UnprocessableEntityException } from '@nestjs/common';
+import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 
 import { UsersService } from './users.service';
 
@@ -26,13 +26,13 @@ export class AuthService {
   async signIn(email: string, password: string) {
     const [user] = await this.usersService.find(email);
 
-    if (!user) throw new UnauthorizedException('Email or password incorrect');
+    if (!user) throw new UnprocessableEntityException('Email or password incorrect');
 
     const [salt, storedHash] = user.password.split('.');
     const hash = (await scrypt(password, salt, 32)) as Buffer;
 
     if (storedHash !== hash.toString('hex')) {
-      throw new UnauthorizedException('Email or password incorrect');
+      throw new UnprocessableEntityException('Email or password incorrect');
     }
 
     return user;

@@ -11,11 +11,15 @@ import {
   Post,
   Query,
   Session,
+  UseGuards,
 } from '@nestjs/common';
+
+import { AuthGuard } from 'src/guards/auth.guard';
 
 import { Serialize } from '../interceptors/serialize.interceptor';
 
 import { AuthService } from './auth.service';
+import { CurrentUser } from './decorators/current-user.decorator';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { UserCredentialDto } from './dtos/user-credential.dto';
 import { UserDto } from './dtos/user.dto';
@@ -26,9 +30,10 @@ import { UsersService } from './users.service';
 export class UsersController {
   constructor(private authService: AuthService, private usersService: UsersService) {}
 
+  @UseGuards(AuthGuard)
   @Get('who-am-i')
-  whoAmI(@Session() session: Record<string, unknown>) {
-    return this.usersService.findOne(session.userId as number);
+  whoAmI(@CurrentUser() user: UserDto) {
+    return user;
   }
 
   @Post('sign-out')
