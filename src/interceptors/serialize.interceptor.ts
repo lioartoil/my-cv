@@ -3,19 +3,22 @@ import { CallHandler, ExecutionContext, NestInterceptor, UseInterceptors } from 
 import { plainToInstance } from 'class-transformer';
 import { Observable, map } from 'rxjs';
 
-export function Serialize(dto: unknown) {
+interface ClassConstructor {
+  new (...args: unknown[]): unknown;
+}
+
+export function Serialize(dto: ClassConstructor) {
   return UseInterceptors(new SerializeInterceptor(dto));
 }
 
 class SerializeInterceptor implements NestInterceptor {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  constructor(private dto: any) {}
+  constructor(private dto: ClassConstructor) {}
 
   intercept(_: ExecutionContext, next: CallHandler<unknown>): Observable<unknown> {
-    return next
-      .handle()
-      .pipe(
-        map((data: unknown) => plainToInstance(this.dto, data, { excludeExtraneousValues: true })),
-      );
+    return next.handle().pipe(
+      map((data: ClassConstructor) => {
+        return plainToInstance(this.dto, data, { excludeExtraneousValues: true });
+      }),
+    );
   }
 }
