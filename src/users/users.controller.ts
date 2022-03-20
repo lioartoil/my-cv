@@ -24,7 +24,7 @@ import { UsersService } from './users.service';
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
-  @Post('signup')
+  @Post('sign-up')
   @HttpCode(HttpStatus.CREATED)
   createUser(@Body() body: CreateUserDto) {
     return this.usersService.create(body);
