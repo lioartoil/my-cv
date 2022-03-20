@@ -10,6 +10,7 @@ import {
   Patch,
   Post,
   Query,
+  Session,
 } from '@nestjs/common';
 
 import { Serialize } from '../interceptors/serialize.interceptor';
@@ -25,15 +26,40 @@ import { UsersService } from './users.service';
 export class UsersController {
   constructor(private authService: AuthService, private usersService: UsersService) {}
 
+  @Get('who-am-i')
+  whoAmI(@Session() session: Record<string, unknown>) {
+    return this.usersService.findOne(session.userId as number);
+  }
+
+  @Post('sign-out')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  signOut(@Session() session: Record<string, unknown>) {
+    session.userId = null;
+  }
+
   @Post('sign-up')
   @HttpCode(HttpStatus.CREATED)
-  createUser(@Body() { email, password }: UserCredentialDto) {
-    return this.authService.signUp(email, password);
+  async createUser(
+    @Body() { email, password }: UserCredentialDto,
+    @Session() session: Record<string, unknown>,
+  ) {
+    const user = await this.authService.signUp(email, password);
+
+    session.userId = user.id;
+
+    return user;
   }
 
   @Post('sign-in')
-  signIn(@Body() { email, password }: UserCredentialDto) {
-    return this.authService.signIn(email, password);
+  async signIn(
+    @Body() { email, password }: UserCredentialDto,
+    @Session() session: Record<string, unknown>,
+  ) {
+    const user = await this.authService.signIn(email, password);
+
+    session.userId = user.id;
+
+    return user;
   }
 
   @Get(':id')

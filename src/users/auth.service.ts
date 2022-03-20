@@ -1,11 +1,7 @@
 import { scrypt as _scrypt, randomBytes } from 'crypto';
 import { promisify } from 'util';
 
-import {
-  Injectable,
-  UnauthorizedException,
-  UnprocessableEntityException,
-} from '@nestjs/common';
+import { Injectable, UnauthorizedException, UnprocessableEntityException } from '@nestjs/common';
 
 import { UsersService } from './users.service';
 
