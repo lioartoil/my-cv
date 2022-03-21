@@ -50,9 +50,7 @@ describe('AuthService', () => {
   });
 
   it('throw an error if user signs up with email that is in use', async () => {
-    fakeUsersService.find = () => {
-      return Promise.resolve([{ id: 1, email: fakeEmail, password: 'P@ssw0rd' } as User]);
-    };
+    await service.signUp(fakeEmail, 'P@ssw0rd');
 
     try {
       await service.signUp(fakeEmail, 'P@ssw0rd');
@@ -70,12 +68,10 @@ describe('AuthService', () => {
   });
 
   it('throws if an invalid password is provided', async () => {
-    fakeUsersService.find = () => {
-      return Promise.resolve([{ email: fakeEmail, password: 'abc.def' } as User]);
-    };
+    await service.signUp(fakeEmail, 'P@ssw0rd');
 
     try {
-      await service.signIn(fakeEmail, 'P@ssw0rd');
+      await service.signIn(fakeEmail, '12345678');
     } catch (error) {
       expect(error).toBeInstanceOf(UnprocessableEntityException);
     }
