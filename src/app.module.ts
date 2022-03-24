@@ -1,4 +1,5 @@
 import { MiddlewareConsumer, Module, ValidationPipe } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_PIPE } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
@@ -14,12 +15,18 @@ const cookieSession = require('cookie-session'); // eslint-disable-line @typescr
 @Module({
   controllers: [AppController],
   imports: [
+    ConfigModule.forRoot({ envFilePath: `.env.${process.env.NODE_ENV}`, isGlobal: true }),
     ReportsModule,
-    TypeOrmModule.forRoot({
-      database: 'db.sqlite',
-      entities: [Report, User],
-      synchronize: true,
-      type: 'sqlite',
+    TypeOrmModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => {
+        return {
+          database: config.get<string>('DB_NAME'),
+          entities: [Report, User],
+          synchronize: true,
+          type: 'sqlite',
+        };
+      },
     }),
     UsersModule,
   ],
