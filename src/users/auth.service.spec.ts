@@ -52,29 +52,23 @@ describe('AuthService', () => {
   it('throw an error if user signs up with email that is in use', async () => {
     await service.signUp(fakeEmail, 'P@ssw0rd');
 
-    try {
-      await service.signUp(fakeEmail, 'P@ssw0rd');
-    } catch (error) {
-      expect(error).toBeInstanceOf(UnprocessableEntityException);
-    }
+    const signUp = service.signUp(fakeEmail, 'P@ssw0rd');
+
+    await expect(signUp).rejects.toBeInstanceOf(UnprocessableEntityException);
   });
 
   it('throws if sign in is called with an unused email', async () => {
-    try {
-      await service.signIn(fakeEmail, 'P@ssw0rd');
-    } catch (error) {
-      expect(error).toBeInstanceOf(UnprocessableEntityException);
-    }
+    const signIn = service.signIn(fakeEmail, 'P@ssw0rd');
+
+    await expect(signIn).rejects.toBeInstanceOf(UnprocessableEntityException);
   });
 
   it('throws if an invalid password is provided', async () => {
     await service.signUp(fakeEmail, 'P@ssw0rd');
 
-    try {
-      await service.signIn(fakeEmail, '12345678');
-    } catch (error) {
-      expect(error).toBeInstanceOf(UnprocessableEntityException);
-    }
+    const signIn = service.signIn(fakeEmail, '12345678');
+
+    await expect(signIn).rejects.toBeInstanceOf(UnprocessableEntityException);
   });
 
   it('returns a user if correct password is provided', async () => {
