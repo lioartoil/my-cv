@@ -28,6 +28,6 @@ export class Report {
   @Column()
   year: number;
 
-  @ManyToOne(() => User, user => user.reports)
+  @ManyToOne(() => User, user => user.reports, { nullable: false })
   user: User;
 }

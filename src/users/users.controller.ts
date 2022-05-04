@@ -22,6 +22,7 @@ import { CurrentUser } from './decorators/current-user.decorator';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { UserCredentialDto } from './dtos/user-credential.dto';
 import { UserDto } from './dtos/user.dto';
+import { User } from './user.entity';
 import { UsersService } from './users.service';
 
 @Serialize(UserDto)
@@ -31,7 +32,7 @@ export class UsersController {
 
   @UseGuards(AuthGuard)
   @Get('who-am-i')
-  whoAmI(@CurrentUser() user: UserDto) {
+  whoAmI(@CurrentUser() user: User) {
     return user;
   }
 
