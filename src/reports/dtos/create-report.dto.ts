@@ -19,8 +19,8 @@ export class CreateReportDto {
   model: string;
 
   @IsNumber()
-  @Max(0)
   @Max(1_000_000)
+  @Min(0)
   price: number;
 
   @IsNumber()
