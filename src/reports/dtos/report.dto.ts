@@ -7,6 +7,9 @@ export class ReportDto {
   id: number;
 
   @Expose()
+  approved: boolean;
+
+  @Expose()
   lat: number;
 
   @Expose()
@@ -28,6 +31,6 @@ export class ReportDto {
   year: number;
 
   @Expose()
-  @Transform(({ obj }: { obj: Report }) => obj.user.id)
-  userId: number;
+  @Transform(({ obj }: { obj: Report }) => obj.user?.id)
+  userId?: number;
 }
